@@ -1,0 +1,12 @@
+[
+  {"question": "有没有制造业的ERP案例？", "expectedHasSource": true, "expectedIntent": "CASE_RETRIEVAL"},
+  {"question": "你们的系统支持国产化吗？", "expectedHasSource": true, "expectedIntent": "PRODUCT_QUERY"},
+  {"question": "广州社保基数是多少？", "expectedHasSource": false, "expectedIntent": "POLICY_QUERY"},
+  {"question": "你好", "expectedHasSource": false, "expectedIntent": "GREETING"},
+  {"question": "去年签了多少合同？", "expectedHasSource": false, "expectedIntent": "DATA_QUERY"},
+  {"question": "有没有医疗行业的案例？", "expectedHasSource": true, "expectedIntent": "CASE_RETRIEVAL"},
+  {"question": "系统硬件配置要求是什么？", "expectedHasSource": true, "expectedIntent": "PRODUCT_QUERY"},
+  {"question": "东莞公积金缴存比例", "expectedHasSource": false, "expectedIntent": "POLICY_QUERY"},
+  {"question": "hi", "expectedHasSource": false, "expectedIntent": "GREETING"},
+  {"question": "量子计算的解决方案", "expectedHasSource": false, "expectedIntent": "PRODUCT_QUERY"}
+]

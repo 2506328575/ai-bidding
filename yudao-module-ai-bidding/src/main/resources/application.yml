@@ -1,0 +1,109 @@
+spring:
+  application:
+    name: yudao-module-ai-bidding
+
+  # H2 内存数据库（Demo 使用）
+  datasource:
+    url: jdbc:h2:mem:aibidding;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# AI Bidding Demo 配置
+aibidding:
+  llm:
+    provider: deepseek
+    api-key: ${DEEPSEEK_API_KEY:your-api-key-here}
+    base-url: https://api.deepseek.com/v1
+    model: deepseek-chat
+    connect-timeout: 5s
+    read-timeout: 60s
+    max-retries: 1
+
+  prompts:
+    templates:
+      - key: intent.classify
+        content: |
+          判断用户问题意图，只返回以下之一：
+          PRODUCT_QUERY | CASE_RETRIEVAL | POLICY_QUERY | DATA_QUERY | GREETING
+
+          示例：
+          "有没有制造业案例" → CASE_RETRIEVAL
+          "系统支持信创吗" → PRODUCT_QUERY
+          "广州社保基数" → POLICY_QUERY
+          "我名下几个项目" → DATA_QUERY
+
+          用户问题：{{question}}
+
+      - key: qa.rag.answer
+        content: |
+          基于以下资料回答问题。如果资料不足以回答，请说"当前案例库暂无相关信息"。
+
+          参考资料：
+          {{retrieved_docs}}
+
+          问题：{{question}}
+
+          要求：回答末尾标注引用来源。
+
+      - key: proposal.outline
+        content: |
+          你是售前方案专家。根据以下客户需求生成方案大纲（6-8个章节），每章含一句话要点说明。
+
+          客户需求:
+          行业: {{industry}}
+          规模: {{scale}}
+          痛点: {{painPoints}}
+          预算: {{budget}}
+
+          输出格式（纯文本，每行一个章节）:
+          1. 章节名: 要点
+          2. 章节名: 要点
+          ...
+
+      - key: proposal.section
+        content: |
+          你是售前方案专家。请为方案中【{{sectionTitle}}】章节撰写专业内容。
+
+          客户需求:
+          行业: {{industry}}
+          规模: {{scale}}
+          痛点: {{painPoints}}
+
+          本章要点: {{sectionKeyPoints}}
+          前文摘要: {{previousSummary}}
+
+          ⚠️ 严禁事项:
+          1. 不要写"好的"、"作为售前专家"、"根据前文"等元话语
+          2. 不要复述本章要点，直接写正文
+          3. 不要用"本章将..."开头
+          4. 直接以章节内容的实质信息开始
+
+          要求: 800-1200字、专业具体、结合实际行业特点、段落格式
+
+      - key: bid.fill_section
+        content: |
+          你正在撰写一份商务标书的【{{sectionTitle}}】部分。
+
+          客户需求背景:
+          行业: {{industry}}
+          项目概况: {{projectInfo}}
+
+          本部分要求: {{sectionPurpose}}
+
+          ⚠️ 严禁事项:
+          1. 不要写"好的"、"作为标书撰写专家"、"根据要求"等元话语
+          2. 直接输出本部分的内容，不要用"本部分将..."开头
+          3. 保持商务标书的正式、专业语气
+          4. 涉及数据处保留适当灵活性
+
+server:
+  port: 8080
+
+logging:
+  level:
+    cn.iocoder.yudao: DEBUG

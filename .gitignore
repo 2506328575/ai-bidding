@@ -1,0 +1,38 @@
+# Java
+yudao-module-ai-bidding/target/
+*.class
+*.jar
+*.war
+
+# Node
+ai-bidding-frontend/node_modules/
+ai-bidding-frontend/dist/
+document-editor/node_modules/
+document-editor/dist/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp
+temp_ocr.png
+*_converted.png
+bid_fill*.json
+bid_filled*.docx
+bid_v*.docx
+bid_final.*
+test_tmpl.docx
+filled_test.docx
+/tmp/
+nohup.out
+document-editor/
