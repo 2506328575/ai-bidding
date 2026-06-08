@@ -64,7 +64,10 @@
       "Bash(rm -f bid_fill*.json bid_filled*.docx bid_final.* bid_v*.docx bid_v*.json compile-errors.txt filled_test.docx test_tmpl.docx)",
       "Bash(ls -la *.json *.docx)",
       "Bash(ls -d backend/ database/ deploy/ gstack-agent-teams/)",
-      "Bash(rm -rf backend/ database/ deploy/ gstack-agent-teams/)"
+      "Bash(rm -rf backend/ database/ deploy/ gstack-agent-teams/)",
+      "Bash(cd \"E:/CodeDemo/AIbidding/backend\")",
+      "Bash(nohup python main.py)",
+      "Bash(sleep 3)"
     ]
   },
   "enableWorkflows": true,
