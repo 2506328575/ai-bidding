@@ -1,0 +1,72 @@
+version: '3.8'
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../ai-bidding-frontend/dist:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+      - editor
+
+  backend:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - MYSQL_URL=mysql+pymysql://root:${MYSQL_ROOT_PASSWORD}@mysql:3306/aibidding
+      - MILVUS_HOST=milvus
+    depends_on:
+      - mysql
+      - milvus
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-aibidding123}
+      MYSQL_DATABASE: aibidding
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ../database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ../database/seed_data.sql:/docker-entrypoint-initdb.d/02_seed.sql
+
+  milvus:
+    image: milvusdb/milvus:latest
+    ports:
+      - "19530:19530"
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000
+    depends_on:
+      - etcd
+      - minio
+
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.5
+    environment:
+      ETCD_AUTO_COMPACTION_MODE: revision
+      ETCD_AUTO_COMPACTION_RETENTION: "1000"
+
+  minio:
+    image: minio/minio:latest
+    command: minio server /data
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+
+  editor:
+    build:
+      context: ../document-editor
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+
+volumes:
+  mysql_data:
