@@ -1723,8 +1723,8 @@ Demo 阶段（2026-06-06）搭建了前后端分离原型，覆盖 M1 技术问�
 | **Prompt 层** | 在 Prompt 末尾加 `⚠️ 严禁事项` 列表 | 明确禁止"好的"、"作为XX专家"、"根据前文"、"本章将"等元话语 |
 | **后端层** | `stripAiPreamble()` 正则后处理 | 对 LLM 输出做安全兜底，用正则剔除常见 AI 开头语（无论 Prompt 怎么调） |
 
-```java
-// 后端兜底 — 永远生效，不依赖 Prompt 质量
+```text
+// 后端兜底 — 永远生效，不依赖 Prompt 质量（Java Demo 示例代码）
 private String stripAiPreamble(String text) {
     return text
         .replaceFirst("(?i)^好的[，,].*?[,，].*?撰写.*?章节[。\\s]*", "")
@@ -1809,8 +1809,8 @@ Demo 使用内存 TF-IDF 模拟向量检索。实际中发现：
 
 **解决方案：** 实现了一个轻量 Markdown → Word 渲染器：
 
-```java
-// 逐行解析 Markdown，映射为 POI 格式
+```text
+// 逐行解析 Markdown（Java Demo POI 示例，Python 栈等效方案见 python-docx + lxml）
 private void renderMarkdownContent(XWPFDocument doc, String text) {
     for (String line : text.split("\n")) {
         // ## → Word 14pt 加粗标题
